@@ -1,0 +1,23 @@
+# Rahasia: kredensial EMQX jangan pernah di-upload
+streamlit/.streamlit/secrets.toml
+.env
+
+# Data riwayat sesi lokal
+*.csv
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# Hasil kompilasi uji logika
+tests/test_logic
+tests/*.exe
+
+# Lain-lain
+*.log
+.DS_Store
+Thumbs.db
+cloudflared

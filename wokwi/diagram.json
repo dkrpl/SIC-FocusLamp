@@ -1,0 +1,307 @@
+{
+  "version": 1,
+  "author": "Tim FocusLamp - SIC Batch 8",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "type": "wokwi-esp32-devkit-v1",
+      "id": "esp",
+      "top": 0,
+      "left": 0,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-hc-sr04",
+      "id": "ultrasonic1",
+      "top": -134.4,
+      "left": -297.6,
+      "attrs": {
+        "distance": "50"
+      }
+    },
+    {
+      "type": "wokwi-photoresistor-sensor",
+      "id": "ldr1",
+      "top": 28.8,
+      "left": -326.4,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-slide-switch",
+      "id": "dock",
+      "top": 124.8,
+      "left": -172.8,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btnStart",
+      "top": 192,
+      "left": -268.8,
+      "attrs": {
+        "color": "green",
+        "label": "START"
+      }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btnEnd",
+      "top": 268.8,
+      "left": -268.8,
+      "attrs": {
+        "color": "red",
+        "label": "END"
+      }
+    },
+    {
+      "type": "board-ssd1306",
+      "id": "oled1",
+      "top": -96,
+      "left": 211.2,
+      "attrs": {
+        "i2cAddress": "0x3c"
+      }
+    },
+    {
+      "type": "wokwi-led-ring",
+      "id": "ring1",
+      "top": 9.6,
+      "left": 220.8,
+      "attrs": {
+        "pixels": "16"
+      }
+    },
+    {
+      "type": "wokwi-buzzer",
+      "id": "bz1",
+      "top": 211.2,
+      "left": 249.6,
+      "attrs": {
+        "volume": "0.2"
+      }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "ledDock",
+      "top": -86.4,
+      "left": -134.4,
+      "attrs": {
+        "color": "limegreen",
+        "label": "DOCK"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "rDock",
+      "top": 4.8,
+      "left": -124.8,
+      "rotate": 90,
+      "attrs": {
+        "value": "220"
+      }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "ledNet",
+      "top": -86.4,
+      "left": -86.4,
+      "attrs": {
+        "color": "yellow",
+        "label": "NET"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "rNet",
+      "top": 4.8,
+      "left": -76.8,
+      "rotate": 90,
+      "attrs": {
+        "value": "220"
+      }
+    }
+  ],
+  "connections": [
+    [
+      "esp:TX0",
+      "$serialMonitor:RX",
+      "",
+      []
+    ],
+    [
+      "esp:RX0",
+      "$serialMonitor:TX",
+      "",
+      []
+    ],
+    [
+      "ultrasonic1:VCC",
+      "esp:VIN",
+      "red",
+      []
+    ],
+    [
+      "ultrasonic1:GND",
+      "esp:GND.2",
+      "black",
+      []
+    ],
+    [
+      "ultrasonic1:TRIG",
+      "esp:D5",
+      "orange",
+      []
+    ],
+    [
+      "ultrasonic1:ECHO",
+      "esp:D18",
+      "purple",
+      []
+    ],
+    [
+      "ldr1:VCC",
+      "esp:3V3",
+      "red",
+      []
+    ],
+    [
+      "ldr1:GND",
+      "esp:GND.1",
+      "black",
+      []
+    ],
+    [
+      "ldr1:AO",
+      "esp:D34",
+      "green",
+      []
+    ],
+    [
+      "dock:2",
+      "esp:D27",
+      "blue",
+      []
+    ],
+    [
+      "dock:3",
+      "esp:GND.2",
+      "black",
+      []
+    ],
+    [
+      "btnStart:1.l",
+      "esp:D32",
+      "green",
+      []
+    ],
+    [
+      "btnStart:2.l",
+      "esp:GND.2",
+      "black",
+      []
+    ],
+    [
+      "btnEnd:1.l",
+      "esp:D33",
+      "red",
+      []
+    ],
+    [
+      "btnEnd:2.l",
+      "esp:GND.2",
+      "black",
+      []
+    ],
+    [
+      "oled1:VCC",
+      "esp:3V3",
+      "red",
+      []
+    ],
+    [
+      "oled1:GND",
+      "esp:GND.1",
+      "black",
+      []
+    ],
+    [
+      "oled1:SDA",
+      "esp:D21",
+      "blue",
+      []
+    ],
+    [
+      "oled1:SCL",
+      "esp:D22",
+      "gold",
+      []
+    ],
+    [
+      "ring1:VCC",
+      "esp:VIN",
+      "red",
+      []
+    ],
+    [
+      "ring1:GND",
+      "esp:GND.1",
+      "black",
+      []
+    ],
+    [
+      "ring1:DIN",
+      "esp:D4",
+      "green",
+      []
+    ],
+    [
+      "bz1:1",
+      "esp:GND.1",
+      "black",
+      []
+    ],
+    [
+      "bz1:2",
+      "esp:D25",
+      "orange",
+      []
+    ],
+    [
+      "esp:D26",
+      "rDock:2",
+      "green",
+      []
+    ],
+    [
+      "rDock:1",
+      "ledDock:A",
+      "green",
+      []
+    ],
+    [
+      "ledDock:C",
+      "esp:GND.1",
+      "black",
+      []
+    ],
+    [
+      "esp:D13",
+      "rNet:2",
+      "gold",
+      []
+    ],
+    [
+      "rNet:1",
+      "ledNet:A",
+      "gold",
+      []
+    ],
+    [
+      "ledNet:C",
+      "esp:GND.1",
+      "black",
+      []
+    ]
+  ],
+  "dependencies": {}
+}

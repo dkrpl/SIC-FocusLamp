@@ -1,0 +1,7 @@
+# Library untuk web dashboard FocusLamp (Python 3.10+)
+streamlit==1.66.1
+paho-mqtt>=2.0
+pandas>=2.0
+numpy>=1.24
+plotly>=5.20
+scikit-learn>=1.3

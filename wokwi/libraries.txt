@@ -1,0 +1,7 @@
+# Wokwi Library List
+# Daftar library yang dipakai sketch.ino. Wokwi memasangnya otomatis.
+PubSubClient
+Adafruit NeoPixel
+Adafruit GFX Library
+Adafruit BusIO
+Adafruit SSD1306
