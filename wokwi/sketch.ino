@@ -195,7 +195,11 @@ void updateBuzzer(uint32_t now) {
 // ============================ 7. LAMPU =====================================
 // fillRing(): mengisi ke-16 LED NeoPixel dengan satu warna (r, g, b)
 //   pada tingkat kecerahan level (0-255), lalu menampilkannya.
+//   Wokwi menampilkan nilai warna NeoPixel apa adanya, sehingga warna redup (misalnya biru level 35)
+//   terlihat hampir hitam. Karena itu level 1..255 dipetakan ke 90..255: warna selalu terbaca,
+//   sedangkan urutan redup-terang tetap sama. Level 0 tetap mati.
 void fillRing(uint8_t r, uint8_t g, uint8_t b, int level) {   // level 0..255
+  if (level > 0) level = 90 + (level * 165) / 255;
   uint32_t c = ring.Color((r * level) / 255, (g * level) / 255, (b * level) / 255);
   for (int i = 0; i < NUM_PIXELS; i++) ring.setPixelColor(i, c);
   ring.show();
@@ -206,12 +210,12 @@ void fillRing(uint8_t r, uint8_t g, uint8_t b, int level) {   // level 0..255
 //   di 10% waktu terakhir), AWAY kuning, HP diangkat merah berkedip, SELESAI hijau,
 //   END PAKSA merah berkedip, DITINGGAL merah redup.
 void updateLamp(uint32_t now) {
-  bool blinkFast = (now / 250) % 2 == 0;
+  bool blinkFast = (now / 250) % 2 == 0;   // kedip merah: terang <-> redup (tidak mati) agar tetap terlihat merah
   bool blinkSlow = (now / 600) % 2 == 0;
   brightness = brightnessFromLight(lightRaw, LDR_BRIGHT_IS_LOW);
 
   if (core.inSession() && core.dockLifted) {            // HP diangkat: merah berkedip
-    fillRing(255, 0, 0, blinkFast ? 200 : 0);
+    fillRing(255, 0, 0, blinkFast ? 200 : 15);
     return;
   }
   switch (core.state) {
@@ -229,7 +233,7 @@ void updateLamp(uint32_t now) {
       break;
     case ST_RESULT:
       if (core.last.result == RES_SELESAI) fillRing(0, 255, 0, 150);
-      else if (core.last.result == RES_END_PAKSA) fillRing(255, 0, 0, blinkFast ? 200 : 0);
+      else if (core.last.result == RES_END_PAKSA) fillRing(255, 0, 0, blinkFast ? 200 : 15);
       else fillRing(255, 0, 0, 40);                      // DITINGGAL: merah redup
       break;
   }
