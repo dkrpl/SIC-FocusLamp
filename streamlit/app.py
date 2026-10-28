@@ -384,6 +384,23 @@ def hari_ini():
                 f"<div class='k' style='margin-top:4px'>Alasannya ada di menu Saran AI.</div></div>", unsafe_allow_html=True)
 
 
+def kirim_durasi(mode, uji):
+    """Dipanggil saat pilihan durasi diubah: langsung kirim set_duration ke alat supaya OLED Wokwi
+    menampilkan durasi baru. Hitung mundur baru berjalan setelah tombol Mulai fokus ditekan.
+    Tidak dikirim saat sesi berjalan (alat menolak), saat web belum terhubung, atau saat memakai data contoh."""
+    pilihan = st.session_state.get(f"durasi_{mode}")
+    if pilihan == "atur":
+        durasi = st.session_state.get(f"durasi_sendiri_{mode}", 4.0 if uji else 40.0)
+    else:
+        durasi = pilihan
+    if durasi is None or not hub.conn["connected"] or hub.mode_simulasi:
+        return
+    if hub.status_now()["state"] in ("FOCUS", "AWAY"):
+        st.toast("Sesi sedang berjalan. Durasi baru berlaku untuk sesi berikutnya.", icon=":material/info:")
+        return
+    tell(hub.set_duration(float(durasi))[0], f"Lampu diatur ke {float(durasi):g} menit")
+
+
 @st.fragment(run_every=3)
 def mulai_sesi():
     """Pilihan lama belajar dan tombol Mulai fokus; status tombol ikut diperbarui otomatis."""
@@ -396,17 +413,18 @@ def mulai_sesi():
     # Pilihan cepat + "Atur sendiri" untuk durasi bebas (0,5-180 menit, batas yang diterima ESP32)
     pilihan = st.segmented_control("Mau belajar berapa lama?", options=opsi + ["atur"], default=bawaan,
                                    format_func=lambda m: "Atur sendiri" if m == "atur" else f"{m} menit",
-                                   key=f"durasi_{mode}")
+                                   key=f"durasi_{mode}", on_change=kirim_durasi, args=(mode, uji))
     if pilihan == "atur":
         durasi = st.number_input("Lama belajar (menit)", min_value=0.5 if uji else 1.0, max_value=180.0,
                                  value=4.0 if uji else 40.0, step=0.5 if uji else 1.0, format="%g",
-                                 key=f"durasi_sendiri_{mode}",
+                                 key=f"durasi_sendiri_{mode}", on_change=kirim_durasi, args=(mode, uji),
                                  help=f"Ketik angka atau pakai tombol - / +. Batas {'0,5' if uji else '1'} sampai 180 menit.")
     else:
         durasi = pilihan or bawaan
     if not uji and state_alat == "READY":
         selesai = datetime.now(fl.WIB) + timedelta(minutes=float(durasi))
         st.caption(f"Kalau mulai sekarang, sesi selesai sekitar pukul {selesai:%H:%M}.")
+    # Durasi sudah dikirim saat dipilih; Mulai fokus mengirimnya sekali lagi agar pasti sama, lalu memulai sesi.
     if st.button(f"Mulai fokus {durasi:g} menit", type="primary", disabled=not siap):
         ok1, _ = hub.set_duration(durasi)
         ok2, _ = hub.start_session()
